@@ -74,12 +74,12 @@ class Command(object):
             for color, msg in self.context.up(group):
                 colorfunc.get(color)(msg)
 
-    # def remove(self, container):
-    #     if container not in self.context.containers:
-    #         red('No container named %s' % container)
-    #     else:
-    #         for color, msg in self.context.remove(container):
-    #             colorfunc.get(color)(msg)
+    def remove(self, container):
+        if container not in self.context.containers:
+            red('No container named %s' % container)
+        else:
+            for color, msg in self.context.remove(container):
+                colorfunc.get(color)(msg)
 
     def down(self, group):
         if group not in self.context.groups:

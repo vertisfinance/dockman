@@ -41,15 +41,15 @@ def up(group):
     command.ContextFreeCommand().ps()
 
 
-# @main.command()
-# @click.argument('container')
-# def remove(container):
-#     """
-#     Stops and removes the given container and all child containers
-#     (those dependt on it).
-#     """
-#     command.Command().remove(container)
-#     command.ContextFreeCommand().ps()
+@main.command()
+@click.argument('container')
+def remove(container):
+    """
+    Stops and removes the given container and all child containers
+    (those dependt on it).
+    """
+    command.Command().remove(container)
+    command.ContextFreeCommand().ps()
 
 
 @main.command()
