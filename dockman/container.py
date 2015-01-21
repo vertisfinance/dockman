@@ -97,7 +97,7 @@ class Container(object):
             except Exception as e:
                 yield(('r', '✘'))
                 yield(('r', str(e)))
-                raise
+                raise e
             else:
                 yield(('g', '✔'))
 
@@ -133,7 +133,7 @@ class Container(object):
             except Exception as e:
                 yield(('r', '✘'))
                 yield(('r', str(e)))
-                raise
+                raise e
         elif state is False:
             yield (('e_', 'already stopped ... '))
         else:
@@ -160,6 +160,6 @@ class Container(object):
             except Exception as e:
                 yield(('r', '✘'))
                 yield(('r', str(e)))
-                raise
+                raise e
 
         yield(('g', '✔'))
