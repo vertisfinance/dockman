@@ -8,3 +8,8 @@ install:
 
 # command to run tests
 script: py.test
+
+after_success:
+    # Report coverage results to coveralls.io
+    - pip install python-coveralls
+    - coveralls
