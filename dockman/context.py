@@ -6,23 +6,27 @@ import os
 
 import yaml
 
-from . import docker as docker_module
 from . import container as container_module
+
+
+class NoConfigException(Exception):
+    pass
+
+
+class WrongConfigException(Exception):
+    pass
 
 
 class Context(object):
 
     def __init__(self, path=None, config=None,
-                 config_filename='dockman.yaml',
-                 docker=docker_module.Docker()):
+                 config_filename='dockman.yaml'):
         self.config_filename = config_filename
-        self.docker = docker
 
         if path is None:
             path = os.getcwd()
 
         if config is None:
-            # try to load the config file, but do not err if not present
             while True:
                 filename = os.path.join(path, self.config_filename)
 
@@ -32,7 +36,7 @@ class Context(object):
 
                 head, tail = os.path.split(path)
                 if not tail:
-                    raise Exception('No config file found')
+                    raise NoConfigException('No config file found')
 
                 path = head
 
@@ -45,7 +49,7 @@ class Context(object):
 
         for name, config in self.config.get('containers', {}).items():
             _container = container_module.Container(name, self.project,
-                                                    config, self.docker)
+                                                    config)
             self.containers.update({name: _container})
             self.containerlist.append(_container)
 
@@ -58,7 +62,7 @@ class Context(object):
             for _container in containers:
                 if _container not in self.containers:
                     message = 'Container %s in group %s not defined.'
-                    raise Exception(message % (_container, name))
+                    raise WrongConfigException(message % (_container, name))
                 self.groups[name].append(self.containers[_container])
 
         self.check_consistency()
@@ -74,7 +78,7 @@ class Context(object):
             for dep in c.dependencies:
                 if dep not in self.containers:
                     message = 'Container %s has an undefined dependency: %s'
-                    raise Exception(message % (c.name, dep))
+                    raise WrongConfigException(message % (c.name, dep))
 
     def dependencies(self, container):
         """
@@ -111,7 +115,7 @@ class Context(object):
                 new = unseen[0]
                 if new in node:
                     message = self._circular_msg(new, node, reverse)
-                    raise Exception(message)
+                    raise WrongConfigException(message)
 
                 node.append(new)
             else:
@@ -129,13 +133,11 @@ class Context(object):
     def run(self, interactive, container_name, extra):
         container = self.containers[container_name]
         for c in self.chain(container)[:-1]:
-            for message in c.start():
-                yield message
+            c.start()
         if interactive:
             container.start_interactive(extra)
         else:
-            for message in container.start(extra):
-                yield message
+            container.start(extra)
 
     def up(self, group_name):
         group = self.groups[group_name]
@@ -147,14 +149,12 @@ class Context(object):
                     to_start.append(dep)
 
         for c in to_start:
-            for message in c.start():
-                yield message
+            c.start()
 
     def remove(self, container_name):
         container = self.containers[container_name]
         for c in self.reverse_chain(container):
-            for message in c.remove():
-                yield message
+            c.remove()
 
     def down(self, group_name):
         group = self.groups[group_name]
@@ -166,5 +166,4 @@ class Context(object):
                     to_stop.append(dep)
 
         for c in to_stop:
-            for message in c.stop():
-                yield message
+            c.stop()

@@ -4,14 +4,17 @@ from __future__ import absolute_import
 
 import os
 
+import dockman
+from . import utils
+from . import docker
+
 
 class Container(object):
 
-    def __init__(self, name, project, config, docker):
+    def __init__(self, name, project, config):
         self.name = name
         self.project = project
         self.config = config
-        self.docker = docker
         self.project_name = '%s.%s' % (project, name)
         self.ports = config.get('ports', {})
 
@@ -63,43 +66,43 @@ class Container(object):
 
         for counter in xrange(1, 10000):
             name = '%s.%s' % (self.project_name, counter)
-            if self.docker.getstate(name) is None:
+            if dockman.DOCKER.getstate(name) is None:
                 return counter
 
     @property
     def state(self):
-        return self.docker.getstate(self.project_name)
+        return dockman.DOCKER.getstate(self.project_name)
 
     def start(self, extra=[]):
-        yield (('e_', '%s ' % self.project_name))
+        utils.echo_('%s ' % self.project_name)
 
         state = self.state
         if state:
-            yield(('e_', 'already running ... '))
-            yield(('g', '✔'))
+            utils.echo_('already running ... ')
+            utils.green('✔')
         else:
-            yield(('e_', 'starting ... '))
+            utils.echo_('starting ... ')
             try:
                 if state is None:
                     extended_env = self.env
                     extended_env.update({'container_name': self.project_name})
                     volumes_from = self.project_volumes_from
-                    self.docker.run(self.image, daemon=True,
-                                    interactive=False, remove=False,
-                                    name=self.project_name,
-                                    volumes_from=volumes_from,
-                                    volumes=self.volumes,
-                                    ports=self.ports,
-                                    links=self.project_links,
-                                    env=extended_env, cmd=extra)
+                    dockman.DOCKER.run(self.image, daemon=True,
+                                       interactive=False, remove=False,
+                                       name=self.project_name,
+                                       volumes_from=volumes_from,
+                                       volumes=self.volumes,
+                                       ports=self.ports,
+                                       links=self.project_links,
+                                       env=extended_env, cmd=extra)
                 else:
-                    self.docker.start(self.project_name)
-            except Exception as e:
-                yield(('r', '✘'))
-                yield(('r', str(e)))
+                    dockman.DOCKER.start(self.project_name)
+            except docker.DockerError as e:
+                utils.red('✘')
+                utils.red(str(e))
                 raise e
             else:
-                yield(('g', '✔'))
+                utils.green('✔')
 
     def start_interactive(self, extra=[]):
         postfix = self.next_postfix
@@ -114,52 +117,52 @@ class Container(object):
         extended_env = self.env
         extended_env.update({'container_name': name})
         volumes_from = self.project_volumes_from
-        self.docker.run(self.image, daemon=False,
-                        interactive=True, remove=True,
-                        name=name, volumes_from=volumes_from,
-                        volumes=self.volumes, ports=ports,
-                        links=self.project_links,
-                        env=extended_env, cmd=extra)
+        dockman.DOCKER.run(self.image, daemon=False,
+                           interactive=True, remove=True,
+                           name=name, volumes_from=volumes_from,
+                           volumes=self.volumes, ports=ports,
+                           links=self.project_links,
+                           env=extended_env, cmd=extra)
 
     def stop(self):
         state = self.state
 
-        yield (('e_', '%s ' % self.project_name))
+        utils.echo_('%s ' % self.project_name)
 
         if state:
-            yield (('e_', 'stopping ... '))
+            utils.echo_('stopping ... ')
             try:
-                self.docker.stop(self.project_name)
+                dockman.DOCKER.stop(self.project_name)
             except Exception as e:
-                yield(('r', '✘'))
-                yield(('r', str(e)))
+                utils.red('✘')
+                utils.red(str(e))
                 raise e
         elif state is False:
-            yield (('e_', 'already stopped ... '))
+            utils.echo_('already stopped ... ')
         else:
-            yield (('e_', 'does not exist ... '))
+            utils.echo_('does not exist ... ')
 
-        yield(('g', '✔'))
+        utils.green('✔')
 
     def remove(self):
         state = self.state
 
         if state:
-            for y in self.stop():
-                yield y
+            self.stop()
             state = False
 
-        yield (('e_', '%s ' % self.project_name))
+        utils.echo_('%s ' % self.project_name)
 
         if state is None:
-            yield (('e_', 'does not exist ... '))
+            utils.echo_('does not exist ... ')
         else:
-            yield (('e_', 'removing ... '))
+            utils.echo_('removing ... ')
             try:
-                self.docker.remove(self.project_name)
+                dockman.DOCKER.remove(self.project_name)
             except Exception as e:
-                yield(('r', '✘'))
-                yield(('r', str(e)))
+                utils.red('✘')
+                utils.red(str(e))
+
                 raise e
 
-        yield(('g', '✔'))
+        utils.green('✔')

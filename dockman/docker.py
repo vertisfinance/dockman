@@ -5,6 +5,12 @@ from __future__ import absolute_import
 import subprocess
 import json
 
+from . import utils
+
+
+class DockerError(Exception):
+    pass
+
 
 class Docker(object):
     def __init__(self, command=['docker']):
@@ -16,7 +22,7 @@ class Docker(object):
         try:
             output = subprocess.check_output(cmd, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
-            raise Exception(e.output)
+            raise DockerError(e.output)
         else:
             return output
 
@@ -144,7 +150,7 @@ class Docker(object):
 
         return ret
 
-    def info_lines(self, project=None):
+    def ps(self, project=None):
 
         def projectfilter(info):
             if project:
@@ -169,22 +175,50 @@ class Docker(object):
 
             max_len = max_name_len + max_state_len + max_bind_len
 
-            yield(('y', '-' * max_len))
+            utils.yellow('-' * max_len)
 
             fmt = '{0:<%s}{1:<%s}{2}' % (max_name_len, max_state_len)
 
             for name, state, bind_description_list in info:
                 message = fmt.format(name, state, bind_description_list[0])
                 if state == 'running':
-                    yield(('g', message))
+                    utils.green(message)
                 else:
-                    yield(('e', message))
+                    utils.echo(message)
 
                 for other in bind_description_list[1:]:
                     message = fmt.format('', '', other)
                     if state == 'running':
-                        yield(('g', message))
+                        utils.green(message)
                     else:
-                        yield(('e', message))
+                        utils.echo(message)
 
-            yield(('y', '-' * max_len))
+            utils.yellow('-' * max_len)
+
+
+class SafeDocker(Docker):
+    """
+    Will not call subprocess, just remember the arguments.
+    """
+    def __init__(self, *args, **kwargs):
+        self._cmd = None
+        self._exception = None
+        self._output = None
+
+        if '_exception' in kwargs:
+            self._exception = kwargs.pop('_exception')
+        if '_output' in kwargs:
+            self._output = kwargs.pop('_output')
+
+        super(SafeDocker, self).__init__(*args, **kwargs)
+
+    def execute(self, params):
+        self._cmd = self.command + params
+
+        if self._exception:
+            raise self._exception
+        else:
+            return self._output
+
+    def execute_interactive(self, params):
+        self._cmd = self.command + params
