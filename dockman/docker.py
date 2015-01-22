@@ -202,23 +202,25 @@ class SafeDocker(Docker):
     """
     def __init__(self, *args, **kwargs):
         self._cmd = None
-        self._exception = None
         self._output = None
 
-        if '_exception' in kwargs:
-            self._exception = kwargs.pop('_exception')
         if '_output' in kwargs:
-            self._output = kwargs.pop('_output')
+            o = kwargs.pop('_output')
+            if isinstance(o, basestring) or isinstance(o, Exception):
+                o = [o]
+            self._output = o
 
         super(SafeDocker, self).__init__(*args, **kwargs)
 
     def execute(self, params):
         self._cmd = self.command + params
 
-        if self._exception:
-            raise self._exception
-        else:
-            return self._output
+        if self._output:
+            actual = self._output.pop(0)
+            if isinstance(actual, Exception):
+                raise actual
+            else:
+                return actual
 
     def execute_interactive(self, params):
         self._cmd = self.command + params
