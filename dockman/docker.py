@@ -200,15 +200,23 @@ class SafeDocker(Docker):
     """
     Will not call subprocess, just remember the arguments.
     """
+    def replace_with_content(self, o):
+	if hasattr(o, 'read'):
+            ret = o.read()
+            o.close()
+            return ret
+        return o
+            
+	
     def __init__(self, *args, **kwargs):
         self._cmd = None
         self._output = None
 
         if '_output' in kwargs:
             o = kwargs.pop('_output')
-            if isinstance(o, basestring) or isinstance(o, Exception):
+            if not hasattr(o, 'pop'):
                 o = [o]
-            self._output = o
+            self._output = map(self.replace_with_content, o)
 
         super(SafeDocker, self).__init__(*args, **kwargs)
 

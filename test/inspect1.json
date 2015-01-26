@@ -1,0 +1,477 @@
+[{
+    "AppArmorProfile": "",
+    "Args": [
+        "run.py",
+        "start"
+    ],
+    "Config": {
+        "AttachStderr": false,
+        "AttachStdin": false,
+        "AttachStdout": false,
+        "Cmd": [
+            "start"
+        ],
+        "CpuShares": 0,
+        "Cpuset": "",
+        "Domainname": "",
+        "Entrypoint": [
+            "python",
+            "run.py"
+        ],
+        "Env": [
+            "DB_PASSWORD=eQ0r8b3B4rdc811YTe8k",
+            "container_name=src.postgres",
+            "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+            "DEBIAN_FRONTEND=noninteractive",
+            "LC_ALL=en_US.UTF-8",
+            "LANG=en_US.UTF-8",
+            "LANGUAGE=en_US:en",
+            "TERM=xterm-256color",
+            "HOME=/home/myvertis"
+        ],
+        "ExposedPorts": {
+            "1112/tcp": {},
+            "5432/tcp": {}
+        },
+        "Hostname": "944afe740314",
+        "Image": "vertis/postgres",
+        "MacAddress": "",
+        "Memory": 0,
+        "MemorySwap": 0,
+        "NetworkDisabled": false,
+        "OnBuild": null,
+        "OpenStdin": false,
+        "PortSpecs": null,
+        "StdinOnce": false,
+        "Tty": false,
+        "User": "myvertis",
+        "Volumes": null,
+        "WorkingDir": "/home/myvertis"
+    },
+    "Created": "2015-01-26T15:03:02.086068133Z",
+    "Driver": "aufs",
+    "ExecDriver": "native-0.2",
+    "HostConfig": {
+        "Binds": null,
+        "CapAdd": null,
+        "CapDrop": null,
+        "ContainerIDFile": "",
+        "Devices": [],
+        "Dns": null,
+        "DnsSearch": null,
+        "ExtraHosts": null,
+        "IpcMode": "",
+        "Links": null,
+        "LxcConf": [],
+        "NetworkMode": "bridge",
+        "PortBindings": {
+            "1112/tcp": [
+                {
+                    "HostIp": "",
+                    "HostPort": "1111"
+                }
+            ],
+            "5432/tcp": [
+                {
+                    "HostIp": "",
+                    "HostPort": "5432"
+                }
+            ]
+        },
+        "Privileged": false,
+        "PublishAllPorts": false,
+        "RestartPolicy": {
+            "MaximumRetryCount": 0,
+            "Name": ""
+        },
+        "SecurityOpt": null,
+        "VolumesFrom": [
+            "src.shared"
+        ]
+    },
+    "HostnamePath": "/var/lib/docker/containers/944afe740314eef784d4abd1741637f576b81069f11de3d0a6c979319b9b8cc4/hostname",
+    "HostsPath": "/var/lib/docker/containers/944afe740314eef784d4abd1741637f576b81069f11de3d0a6c979319b9b8cc4/hosts",
+    "Id": "944afe740314eef784d4abd1741637f576b81069f11de3d0a6c979319b9b8cc4",
+    "Image": "f8114af95bf56573dc4ae6a80a1f2c6add701564794f8758a6d3d15b4044c79b",
+    "MountLabel": "",
+    "Name": "/src.postgres",
+    "NetworkSettings": {
+        "Bridge": "docker0",
+        "Gateway": "172.17.42.1",
+        "IPAddress": "172.17.0.72",
+        "IPPrefixLen": 16,
+        "MacAddress": "02:42:ac:11:00:48",
+        "PortMapping": null,
+        "Ports": {
+            "1112/tcp": [
+                {
+                    "HostIp": "0.0.0.0",
+                    "HostPort": "1111"
+                }
+            ],
+            "5432/tcp": [
+                {
+                    "HostIp": "0.0.0.0",
+                    "HostPort": "5432"
+                }
+            ]
+        }
+    },
+    "Path": "python",
+    "ProcessLabel": "",
+    "ResolvConfPath": "/var/lib/docker/containers/944afe740314eef784d4abd1741637f576b81069f11de3d0a6c979319b9b8cc4/resolv.conf",
+    "State": {
+        "Error": "",
+        "ExitCode": 0,
+        "FinishedAt": "0001-01-01T00:00:00Z",
+        "OOMKilled": false,
+        "Paused": false,
+        "Pid": 22021,
+        "Restarting": false,
+        "Running": true,
+        "StartedAt": "2015-01-26T15:03:02.309246076Z"
+    },
+    "Volumes": {
+        "/home/myvertis/shared": "/var/lib/docker/vfs/dir/8775d9ab97b6ffe3c1f18d517c8981ddacb51729ddd5e0b5d0f46225b02fa08e"
+    },
+    "VolumesRW": {
+        "/home/myvertis/shared": true
+    }
+}
+,{
+    "AppArmorProfile": "",
+    "Args": [
+        "run.py",
+        "start"
+    ],
+    "Config": {
+        "AttachStderr": false,
+        "AttachStdin": false,
+        "AttachStdout": false,
+        "Cmd": [
+            "start"
+        ],
+        "CpuShares": 0,
+        "Cpuset": "",
+        "Domainname": "",
+        "Entrypoint": [
+            "python",
+            "run.py"
+        ],
+        "Env": [
+            "container_name=src.shared",
+            "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+            "DEBIAN_FRONTEND=noninteractive",
+            "LC_ALL=en_US.UTF-8",
+            "LANG=en_US.UTF-8",
+            "LANGUAGE=en_US:en",
+            "TERM=xterm-256color",
+            "HOME=/home/myvertis"
+        ],
+        "ExposedPorts": null,
+        "Hostname": "2fb996a8e981",
+        "Image": "vertis/shared",
+        "MacAddress": "",
+        "Memory": 0,
+        "MemorySwap": 0,
+        "NetworkDisabled": false,
+        "OnBuild": null,
+        "OpenStdin": false,
+        "PortSpecs": null,
+        "StdinOnce": false,
+        "Tty": false,
+        "User": "myvertis",
+        "Volumes": {
+            "/home/myvertis/shared": {}
+        },
+        "WorkingDir": "/home/myvertis"
+    },
+    "Created": "2015-01-26T14:31:41.072649167Z",
+    "Driver": "aufs",
+    "ExecDriver": "native-0.2",
+    "HostConfig": {
+        "Binds": null,
+        "CapAdd": null,
+        "CapDrop": null,
+        "ContainerIDFile": "",
+        "Devices": [],
+        "Dns": null,
+        "DnsSearch": null,
+        "ExtraHosts": null,
+        "IpcMode": "",
+        "Links": null,
+        "LxcConf": [],
+        "NetworkMode": "bridge",
+        "PortBindings": {},
+        "Privileged": false,
+        "PublishAllPorts": false,
+        "RestartPolicy": {
+            "MaximumRetryCount": 0,
+            "Name": ""
+        },
+        "SecurityOpt": null,
+        "VolumesFrom": null
+    },
+    "HostnamePath": "/var/lib/docker/containers/2fb996a8e981d7035dba76a96725b230dfd52bd946ced22878b71cf56b80d93a/hostname",
+    "HostsPath": "/var/lib/docker/containers/2fb996a8e981d7035dba76a96725b230dfd52bd946ced22878b71cf56b80d93a/hosts",
+    "Id": "2fb996a8e981d7035dba76a96725b230dfd52bd946ced22878b71cf56b80d93a",
+    "Image": "b306c53419355ab1e7fa2679fdfae877dd3537adcb075ab1cc13793eb01f4bb6",
+    "MountLabel": "",
+    "Name": "/src.shared",
+    "NetworkSettings": {
+        "Bridge": "docker0",
+        "Gateway": "172.17.42.1",
+        "IPAddress": "172.17.0.71",
+        "IPPrefixLen": 16,
+        "MacAddress": "02:42:ac:11:00:47",
+        "PortMapping": null,
+        "Ports": {}
+    },
+    "Path": "python",
+    "ProcessLabel": "",
+    "ResolvConfPath": "/var/lib/docker/containers/2fb996a8e981d7035dba76a96725b230dfd52bd946ced22878b71cf56b80d93a/resolv.conf",
+    "State": {
+        "Error": "",
+        "ExitCode": 0,
+        "FinishedAt": "2015-01-26T15:01:59.961901218Z",
+        "OOMKilled": false,
+        "Paused": false,
+        "Pid": 21956,
+        "Restarting": false,
+        "Running": true,
+        "StartedAt": "2015-01-26T15:03:02.028687372Z"
+    },
+    "Volumes": {
+        "/home/myvertis/shared": "/var/lib/docker/vfs/dir/8775d9ab97b6ffe3c1f18d517c8981ddacb51729ddd5e0b5d0f46225b02fa08e"
+    },
+    "VolumesRW": {
+        "/home/myvertis/shared": true
+    }
+}
+,{
+    "AppArmorProfile": "",
+    "Args": [
+        "run.py",
+        "start"
+    ],
+    "Config": {
+        "AttachStderr": false,
+        "AttachStdin": false,
+        "AttachStdout": false,
+        "Cmd": [
+            "start"
+        ],
+        "CpuShares": 0,
+        "Cpuset": "",
+        "Domainname": "",
+        "Entrypoint": [
+            "python",
+            "run.py"
+        ],
+        "Env": [
+            "DB_PASSWORD=eQ0r8b3B4rdc811YTe8k",
+            "container_name=mv_experiment.postgres",
+            "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+            "LANG=en_US.UTF-8",
+            "LANGUAGE=en_US:en",
+            "LC_ALL=en_US.UTF-8",
+            "HOME=/"
+        ],
+        "ExposedPorts": {
+            "5432/tcp": {}
+        },
+        "Hostname": "2ba796be766d",
+        "Image": "myvertis/postgres",
+        "MacAddress": "",
+        "Memory": 0,
+        "MemorySwap": 0,
+        "NetworkDisabled": false,
+        "OnBuild": null,
+        "OpenStdin": false,
+        "PortSpecs": null,
+        "StdinOnce": false,
+        "Tty": false,
+        "User": "postgres",
+        "Volumes": null,
+        "WorkingDir": ""
+    },
+    "Created": "2015-01-20T14:52:09.52613793Z",
+    "Driver": "aufs",
+    "ExecDriver": "native-0.2",
+    "HostConfig": {
+        "Binds": null,
+        "CapAdd": null,
+        "CapDrop": null,
+        "ContainerIDFile": "",
+        "Devices": [],
+        "Dns": null,
+        "DnsSearch": null,
+        "ExtraHosts": null,
+        "IpcMode": "",
+        "Links": null,
+        "LxcConf": [],
+        "NetworkMode": "bridge",
+        "PortBindings": {
+            "5432/tcp": [
+                {
+                    "HostIp": "",
+                    "HostPort": "5432"
+                }
+            ]
+        },
+        "Privileged": false,
+        "PublishAllPorts": false,
+        "RestartPolicy": {
+            "MaximumRetryCount": 0,
+            "Name": ""
+        },
+        "SecurityOpt": null,
+        "VolumesFrom": [
+            "mv_experiment.shared"
+        ]
+    },
+    "HostnamePath": "/var/lib/docker/containers/2ba796be766d51ee5c49638c82155b7d2d6557db94955744709c2833ed1f99b3/hostname",
+    "HostsPath": "/var/lib/docker/containers/2ba796be766d51ee5c49638c82155b7d2d6557db94955744709c2833ed1f99b3/hosts",
+    "Id": "2ba796be766d51ee5c49638c82155b7d2d6557db94955744709c2833ed1f99b3",
+    "Image": "41b71dd62c5f5aab288a74f9a04322df5e7b2cbf749d7689cf7cb746dd956288",
+    "MountLabel": "",
+    "Name": "/mv_experiment.postgres",
+    "NetworkSettings": {
+        "Bridge": "",
+        "Gateway": "",
+        "IPAddress": "",
+        "IPPrefixLen": 0,
+        "MacAddress": "",
+        "PortMapping": null,
+        "Ports": null
+    },
+    "Path": "python",
+    "ProcessLabel": "",
+    "ResolvConfPath": "/var/lib/docker/containers/2ba796be766d51ee5c49638c82155b7d2d6557db94955744709c2833ed1f99b3/resolv.conf",
+    "State": {
+        "Error": "",
+        "ExitCode": 0,
+        "FinishedAt": "2015-01-21T16:19:17.825350529Z",
+        "OOMKilled": false,
+        "Paused": false,
+        "Pid": 0,
+        "Restarting": false,
+        "Running": false,
+        "StartedAt": "2015-01-21T07:52:39.843430933Z"
+    },
+    "Volumes": {
+        "/shared": "/var/lib/docker/vfs/dir/75c61d068cd937bf8e927276d8d21fde23aba3ffb7a1b057368ee743b1b8f400"
+    },
+    "VolumesRW": {
+        "/shared": true
+    }
+}
+,{
+    "AppArmorProfile": "",
+    "Args": [
+        "run.py",
+        "start"
+    ],
+    "Config": {
+        "AttachStderr": false,
+        "AttachStdin": false,
+        "AttachStdout": false,
+        "Cmd": [
+            "start"
+        ],
+        "CpuShares": 0,
+        "Cpuset": "",
+        "Domainname": "",
+        "Entrypoint": [
+            "python",
+            "run.py"
+        ],
+        "Env": [
+            "container_name=mv_experiment.shared",
+            "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+            "LANG=en_US.UTF-8",
+            "LANGUAGE=en_US:en",
+            "LC_ALL=en_US.UTF-8",
+            "HOME=/"
+        ],
+        "ExposedPorts": null,
+        "Hostname": "fc05dd6c5e9c",
+        "Image": "myvertis/shared",
+        "MacAddress": "",
+        "Memory": 0,
+        "MemorySwap": 0,
+        "NetworkDisabled": false,
+        "OnBuild": null,
+        "OpenStdin": false,
+        "PortSpecs": null,
+        "StdinOnce": false,
+        "Tty": false,
+        "User": "",
+        "Volumes": {
+            "/shared": {}
+        },
+        "WorkingDir": ""
+    },
+    "Created": "2015-01-20T14:52:09.322981725Z",
+    "Driver": "aufs",
+    "ExecDriver": "native-0.2",
+    "HostConfig": {
+        "Binds": null,
+        "CapAdd": null,
+        "CapDrop": null,
+        "ContainerIDFile": "",
+        "Devices": [],
+        "Dns": null,
+        "DnsSearch": null,
+        "ExtraHosts": null,
+        "IpcMode": "",
+        "Links": null,
+        "LxcConf": [],
+        "NetworkMode": "bridge",
+        "PortBindings": {},
+        "Privileged": false,
+        "PublishAllPorts": false,
+        "RestartPolicy": {
+            "MaximumRetryCount": 0,
+            "Name": ""
+        },
+        "SecurityOpt": null,
+        "VolumesFrom": null
+    },
+    "HostnamePath": "/var/lib/docker/containers/fc05dd6c5e9c15e507f89ec3b0209d03624977ce95bc489699f68de8a96d442a/hostname",
+    "HostsPath": "/var/lib/docker/containers/fc05dd6c5e9c15e507f89ec3b0209d03624977ce95bc489699f68de8a96d442a/hosts",
+    "Id": "fc05dd6c5e9c15e507f89ec3b0209d03624977ce95bc489699f68de8a96d442a",
+    "Image": "e5af711b4a5edb13b0e62009798023d4a721509592963e11f7555bd659e8d6f5",
+    "MountLabel": "",
+    "Name": "/mv_experiment.shared",
+    "NetworkSettings": {
+        "Bridge": "",
+        "Gateway": "",
+        "IPAddress": "",
+        "IPPrefixLen": 0,
+        "MacAddress": "",
+        "PortMapping": null,
+        "Ports": null
+    },
+    "Path": "python",
+    "ProcessLabel": "",
+    "ResolvConfPath": "/var/lib/docker/containers/fc05dd6c5e9c15e507f89ec3b0209d03624977ce95bc489699f68de8a96d442a/resolv.conf",
+    "State": {
+        "Error": "",
+        "ExitCode": 254,
+        "FinishedAt": "2015-01-21T16:19:17.731985989Z",
+        "OOMKilled": false,
+        "Paused": false,
+        "Pid": 0,
+        "Restarting": false,
+        "Running": false,
+        "StartedAt": "2015-01-21T07:52:39.702686321Z"
+    },
+    "Volumes": {
+        "/shared": "/var/lib/docker/vfs/dir/75c61d068cd937bf8e927276d8d21fde23aba3ffb7a1b057368ee743b1b8f400"
+    },
+    "VolumesRW": {
+        "/shared": true
+    }
+}
+]
