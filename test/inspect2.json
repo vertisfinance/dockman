@@ -96,26 +96,13 @@
     "MountLabel": "",
     "Name": "/src.postgres",
     "NetworkSettings": {
-        "Bridge": "docker0",
-        "Gateway": "172.17.42.1",
-        "IPAddress": "172.17.0.72",
-        "IPPrefixLen": 16,
-        "MacAddress": "02:42:ac:11:00:48",
+        "Bridge": "",
+        "Gateway": "",
+        "IPAddress": "",
+        "IPPrefixLen": 0,
+        "MacAddress": "",
         "PortMapping": null,
-        "Ports": {
-            "1112/tcp": [
-                {
-                    "HostIp": "0.0.0.0",
-                    "HostPort": "1111"
-                }
-            ],
-            "5432/tcp": [
-                {
-                    "HostIp": "0.0.0.0",
-                    "HostPort": "5432"
-                }
-            ]
-        }
+        "Ports": null
     },
     "Path": "python",
     "ProcessLabel": "",
@@ -123,12 +110,12 @@
     "State": {
         "Error": "",
         "ExitCode": 0,
-        "FinishedAt": "0001-01-01T00:00:00Z",
+        "FinishedAt": "2015-01-26T22:18:18.326687261Z",
         "OOMKilled": false,
         "Paused": false,
-        "Pid": 22021,
+        "Pid": 0,
         "Restarting": false,
-        "Running": true,
+        "Running": false,
         "StartedAt": "2015-01-26T15:03:02.309246076Z"
     },
     "Volumes": {
@@ -219,26 +206,26 @@
     "MountLabel": "",
     "Name": "/src.shared",
     "NetworkSettings": {
-        "Bridge": "docker0",
-        "Gateway": "172.17.42.1",
-        "IPAddress": "172.17.0.71",
-        "IPPrefixLen": 16,
-        "MacAddress": "02:42:ac:11:00:47",
+        "Bridge": "",
+        "Gateway": "",
+        "IPAddress": "",
+        "IPPrefixLen": 0,
+        "MacAddress": "",
         "PortMapping": null,
-        "Ports": {}
+        "Ports": null
     },
     "Path": "python",
     "ProcessLabel": "",
     "ResolvConfPath": "/var/lib/docker/containers/2fb996a8e981d7035dba76a96725b230dfd52bd946ced22878b71cf56b80d93a/resolv.conf",
     "State": {
         "Error": "",
-        "ExitCode": 0,
-        "FinishedAt": "2015-01-26T15:01:59.961901218Z",
+        "ExitCode": 254,
+        "FinishedAt": "2015-01-26T22:18:18.277763417Z",
         "OOMKilled": false,
         "Paused": false,
-        "Pid": 21956,
+        "Pid": 0,
         "Restarting": false,
-        "Running": true,
+        "Running": false,
         "StartedAt": "2015-01-26T15:03:02.028687372Z"
     },
     "Volumes": {
@@ -358,114 +345,6 @@
         "Restarting": false,
         "Running": false,
         "StartedAt": "2015-01-21T07:52:39.843430933Z"
-    },
-    "Volumes": {
-        "/shared": "/var/lib/docker/vfs/dir/75c61d068cd937bf8e927276d8d21fde23aba3ffb7a1b057368ee743b1b8f400"
-    },
-    "VolumesRW": {
-        "/shared": true
-    }
-}
-,{
-    "AppArmorProfile": "",
-    "Args": [
-        "run.py",
-        "start"
-    ],
-    "Config": {
-        "AttachStderr": false,
-        "AttachStdin": false,
-        "AttachStdout": false,
-        "Cmd": [
-            "start"
-        ],
-        "CpuShares": 0,
-        "Cpuset": "",
-        "Domainname": "",
-        "Entrypoint": [
-            "python",
-            "run.py"
-        ],
-        "Env": [
-            "container_name=mv_experiment.shared",
-            "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
-            "LANG=en_US.UTF-8",
-            "LANGUAGE=en_US:en",
-            "LC_ALL=en_US.UTF-8",
-            "HOME=/"
-        ],
-        "ExposedPorts": null,
-        "Hostname": "fc05dd6c5e9c",
-        "Image": "myvertis/shared",
-        "MacAddress": "",
-        "Memory": 0,
-        "MemorySwap": 0,
-        "NetworkDisabled": false,
-        "OnBuild": null,
-        "OpenStdin": false,
-        "PortSpecs": null,
-        "StdinOnce": false,
-        "Tty": false,
-        "User": "",
-        "Volumes": {
-            "/shared": {}
-        },
-        "WorkingDir": ""
-    },
-    "Created": "2015-01-20T14:52:09.322981725Z",
-    "Driver": "aufs",
-    "ExecDriver": "native-0.2",
-    "HostConfig": {
-        "Binds": null,
-        "CapAdd": null,
-        "CapDrop": null,
-        "ContainerIDFile": "",
-        "Devices": [],
-        "Dns": null,
-        "DnsSearch": null,
-        "ExtraHosts": null,
-        "IpcMode": "",
-        "Links": null,
-        "LxcConf": [],
-        "NetworkMode": "bridge",
-        "PortBindings": {},
-        "Privileged": false,
-        "PublishAllPorts": false,
-        "RestartPolicy": {
-            "MaximumRetryCount": 0,
-            "Name": ""
-        },
-        "SecurityOpt": null,
-        "VolumesFrom": null
-    },
-    "HostnamePath": "/var/lib/docker/containers/fc05dd6c5e9c15e507f89ec3b0209d03624977ce95bc489699f68de8a96d442a/hostname",
-    "HostsPath": "/var/lib/docker/containers/fc05dd6c5e9c15e507f89ec3b0209d03624977ce95bc489699f68de8a96d442a/hosts",
-    "Id": "fc05dd6c5e9c15e507f89ec3b0209d03624977ce95bc489699f68de8a96d442a",
-    "Image": "e5af711b4a5edb13b0e62009798023d4a721509592963e11f7555bd659e8d6f5",
-    "MountLabel": "",
-    "Name": "/shared",
-    "NetworkSettings": {
-        "Bridge": "",
-        "Gateway": "",
-        "IPAddress": "",
-        "IPPrefixLen": 0,
-        "MacAddress": "",
-        "PortMapping": null,
-        "Ports": null
-    },
-    "Path": "python",
-    "ProcessLabel": "",
-    "ResolvConfPath": "/var/lib/docker/containers/fc05dd6c5e9c15e507f89ec3b0209d03624977ce95bc489699f68de8a96d442a/resolv.conf",
-    "State": {
-        "Error": "",
-        "ExitCode": 254,
-        "FinishedAt": "2015-01-21T16:19:17.731985989Z",
-        "OOMKilled": false,
-        "Paused": false,
-        "Pid": 0,
-        "Restarting": false,
-        "Running": false,
-        "StartedAt": "2015-01-21T07:52:39.702686321Z"
     },
     "Volumes": {
         "/shared": "/var/lib/docker/vfs/dir/75c61d068cd937bf8e927276d8d21fde23aba3ffb7a1b057368ee743b1b8f400"

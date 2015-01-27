@@ -135,8 +135,6 @@ class Docker(object):
                 ports = {}
 
             for container_port, bind_list in ports.items():
-                if bind_list is None:
-                    bind_list = []
                 container_port = container_port.split('/')[0]
                 for bind_item in bind_list:
                     desc = '%s -> %s:%s' % (container_port,
@@ -171,7 +169,7 @@ class Docker(object):
 
             # compensate when no bind info
             if max_bind_len == 0:
-                max_bind_len = -2
+                max_state_len -= 2
 
             max_len = max_name_len + max_state_len + max_bind_len
 
@@ -188,10 +186,7 @@ class Docker(object):
 
                 for other in bind_description_list[1:]:
                     message = fmt.format('', '', other)
-                    if state == 'running':
-                        utils.green(message)
-                    else:
-                        utils.echo(message)
+                    utils.green(message)
 
             utils.yellow('-' * max_len)
 
@@ -201,13 +196,12 @@ class SafeDocker(Docker):
     Will not call subprocess, just remember the arguments.
     """
     def replace_with_content(self, o):
-	if hasattr(o, 'read'):
-            ret = o.read()
-            o.close()
-            return ret
+        if hasattr(o, 'read'):
+                ret = o.read()
+                o.close()
+                return ret
         return o
-            
-	
+
     def __init__(self, *args, **kwargs):
         self._cmd = None
         self._output = None

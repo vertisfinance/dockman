@@ -80,6 +80,11 @@ def test_container_ids():
     assert docker.container_ids == ids
 
 
+def test_container_info():
+    docker = SafeDocker(_output=[''])
+    assert docker.container_info == []
+
+
 def test_ps(capsys):
     container_ids = '944afe740314\n2fb996a8e981\n2ba796be766d\nfc05dd6c5e9c\n'
     container_info = open(path('inspect1.json'), 'r')
@@ -91,3 +96,14 @@ def test_ps(capsys):
                    '                       1112 -> 0.0.0.0:1111\n'
                    'src.shared    running  \n'
                    '-------------------------------------------\n')
+
+    container_ids = '944afe740314\n2fb996a8e981\n2ba796be766d\nfc05dd6c5e9c\n'
+    container_info = open(path('inspect2.json'), 'r')
+    docker = SafeDocker(_output=[container_ids, container_info])
+    docker.ps()
+    out, _ = capsys.readouterr()
+    assert out == ('------------------------------\n'
+                   'src.postgres            exited\n'
+                   'src.shared              exited\n'
+                   'mv_experiment.postgres  exited\n'
+                   '------------------------------\n')
