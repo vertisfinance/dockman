@@ -136,7 +136,7 @@ class Docker(object):
 
             for container_port, bind_list in ports.items():
                 container_port = container_port.split('/')[0]
-                for bind_item in bind_list:
+                for bind_item in bind_list or []:
                     desc = '%s -> %s:%s' % (container_port,
                                             bind_item['HostIp'],
                                             bind_item['HostPort'])
