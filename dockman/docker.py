@@ -80,7 +80,7 @@ class Docker(object):
         self.execute(['stop', container_name])
 
     def remove(self, container_name):
-        self.execute(['rm', container_name])
+        self.execute(['rm', '-v', container_name])
 
     def getstate(self, container_name):
         """

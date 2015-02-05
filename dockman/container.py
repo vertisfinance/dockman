@@ -44,6 +44,8 @@ class Container(object):
         linkitems = self.links.items()
         _l = dict([('%s.%s' % (self.project, k), v) for k, v in linkitems])
         self.project_links = _l
+        _cmd = config.get('cmd', None)
+        self.cmd = [_cmd] if _cmd else []
 
     @property
     def dependencies(self):
@@ -94,7 +96,7 @@ class Container(object):
                                        volumes=self.volumes,
                                        ports=self.ports,
                                        links=self.project_links,
-                                       env=extended_env, cmd=extra)
+                                       env=extended_env, cmd=self.cmd + extra)
                 else:
                     dockman.DOCKER.start(self.project_name)
             except docker.DockerError as e:
@@ -122,7 +124,7 @@ class Container(object):
                            name=name, volumes_from=volumes_from,
                            volumes=self.volumes, ports=ports,
                            links=self.project_links,
-                           env=extended_env, cmd=extra)
+                           env=extended_env, cmd=self.cmd + extra)
 
     def stop(self):
         state = self.state
