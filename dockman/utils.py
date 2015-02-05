@@ -21,6 +21,14 @@ SafeLoader.add_constructor(u'tag:yaml.org,2002:str', construct_yaml_str)
 # --------------------
 
 
+class NoConfigException(Exception):
+    pass
+
+
+class WrongConfigException(Exception):
+    pass
+
+
 red = functools.partial(click.secho, fg='red')
 red_ = functools.partial(click.secho, fg='red', nl=False)
 green = functools.partial(click.secho, fg='green')

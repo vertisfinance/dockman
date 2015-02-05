@@ -22,7 +22,8 @@ class Container(object):
         try:
             self.image = config['image']
         except KeyError:
-            raise ('No image given for container %s' % self.name)
+            msg = 'No image given for container %s' % self.name
+            raise utils.WrongConfigException(msg)
 
         # We can use ~ in the config file
         self.volumes = {}

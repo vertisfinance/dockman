@@ -7,14 +7,7 @@ import os
 import yaml
 
 from . import container as container_module
-
-
-class NoConfigException(Exception):
-    pass
-
-
-class WrongConfigException(Exception):
-    pass
+from .utils import NoConfigException, WrongConfigException
 
 
 class Context(object):
@@ -44,11 +37,22 @@ class Context(object):
         self.config = config
         self.path = path
 
+        if not isinstance(config, dict):
+            raise WrongConfigException('Config must be a dictionary.')
+
         # load the containers
         self.containers = {}
         self.containerlist = []
 
-        for name, config in self.config.get('containers', {}).items():
+        containers = self.config.get('containers', {})
+        if not isinstance(containers, dict):
+            raise WrongConfigException('Containers must be a dictionary.')
+
+        for name, config in containers.items():
+            if not isinstance(config, dict):
+                raise WrongConfigException('Container config must '
+                                           'be a dictionary.')
+
             _container = container_module.Container(name,
                                                     self.project,
                                                     self.path,
