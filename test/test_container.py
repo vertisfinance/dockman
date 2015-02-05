@@ -6,5 +6,5 @@ def test_dependencies():
               'volumes_from': ['shared'],
               'links': {'postgres': 'db'}}
 
-    c = Container('foo', 'bar_project', config)
+    c = Container('foo', 'bar_project', '', config)
     assert c.dependencies == set(['shared', 'postgres'])
