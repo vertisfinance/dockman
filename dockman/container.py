@@ -11,9 +11,10 @@ from . import docker
 
 class Container(object):
 
-    def __init__(self, name, project, config):
+    def __init__(self, name, project, path, config):
         self.name = name
         self.project = project
+        self.path = path
         self.config = config
         self.project_name = '%s.%s' % (project, name)
         self.ports = config.get('ports', {})
@@ -26,8 +27,9 @@ class Container(object):
         # We can use ~ in the config file
         self.volumes = {}
         for hostvolume, containervolume in config.get('volumes', {}).items():
-            _hostvolume = os.path.expanduser(hostvolume)
-            self.volumes[_hostvolume] = containervolume
+            _ = os.path.expanduser(hostvolume)
+            _ = os.path.normpath(os.path.join(self.path, _))
+            self.volumes[_] = containervolume
 
         self.env = {}
         for key, value in config.get('env', {}).items():

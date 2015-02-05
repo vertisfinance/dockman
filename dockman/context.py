@@ -42,13 +42,16 @@ class Context(object):
 
         self.project = os.path.split(path)[1]
         self.config = config
+        self.path = path
 
         # load the containers
         self.containers = {}
         self.containerlist = []
 
         for name, config in self.config.get('containers', {}).items():
-            _container = container_module.Container(name, self.project,
+            _container = container_module.Container(name,
+                                                    self.project,
+                                                    self.path,
                                                     config)
             self.containers.update({name: _container})
             self.containerlist.append(_container)
