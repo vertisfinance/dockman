@@ -71,7 +71,7 @@ def test_start_stop_remove():
     docker.stop('x')
     assert docker._cmd == ['docker', 'stop', 'x']
     docker.remove('x')
-    assert docker._cmd == ['docker', 'rm', 'x']
+    assert docker._cmd == ['docker', 'rm', '-v', 'x']
 
 
 def test_container_ids():
