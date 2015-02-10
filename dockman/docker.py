@@ -4,6 +4,8 @@ from __future__ import absolute_import
 
 import subprocess
 import json
+import threading
+import Queue
 
 from . import utils
 
@@ -12,9 +14,37 @@ class DockerError(Exception):
     pass
 
 
+class LogsThread(threading.Thread):
+    def __init__(self, queue, command, container_name, **kwargs):
+        super(LogsThread, self).__init__(**kwargs)
+        self.queue = queue
+        self.command = command
+        self.container_name = container_name
+        self.sp = None
+
+    def run(self):
+        fix_cmd = ['logs', '-f', self.container_name]
+        self.sp = subprocess.Popen(self.command + fix_cmd,
+                                   stdout=subprocess.PIPE,
+                                   stderr=subprocess.STDOUT)
+
+        while True:
+            line = self.sp.stdout.readline()
+            if not line:
+                break
+            self.queue.put('[%s] %s' % (self.container_name, line))
+
+    def stop(self):
+        if self.sp and self.sp.poll() is None:
+            self.sp.terminate()
+            self.sp.wait()
+
+
 class Docker(object):
     def __init__(self, command=['docker']):
         self.command = command
+        self.logthreads = set()
+        self.queue = Queue.Queue()
 
     def execute(self, params):
         cmd = self.command + params
@@ -189,6 +219,24 @@ class Docker(object):
                     utils.green(message)
 
             utils.yellow('-' * max_len)
+
+    def logs(self, container_names):
+        for cn in container_names:
+            th = LogsThread(self.queue, self.command, cn)
+            self.logthreads.add(th)
+            th.start()
+
+        while True:
+            try:
+                line = self.queue.get(False, 0.1)
+            except Queue.Empty:
+                continue
+            else:
+                utils.echo(line, nl=False)
+
+    def stopthreads(self):
+        for th in self.logthreads:
+            th.stop()
 
 
 class SafeDocker(Docker):

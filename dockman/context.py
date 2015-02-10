@@ -6,6 +6,7 @@ import os
 
 import yaml
 
+import dockman
 from . import container as container_module
 from .utils import NoConfigException, WrongConfigException
 
@@ -174,3 +175,7 @@ class Context(object):
 
         for c in to_stop:
             c.stop()
+
+    def logs(self, group_name):
+        group = self.groups[group_name]
+        dockman.DOCKER.logs([c.full_name for c in group])

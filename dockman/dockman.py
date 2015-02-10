@@ -95,3 +95,18 @@ def down(group):
     else:
         dockman.CONTEXT.down(group)
     dockman.DOCKER.ps(dockman.CONTEXT.project)
+
+
+@main.command()
+@click.argument('group')
+@utils.needs_context
+def logs(group):
+    # if container not in dockman.CONTEXT.containers:
+    #     utils.red('No container named %s' % container)
+    # else:
+    #     dockman.DOCKER.logs(container)
+    try:
+        dockman.CONTEXT.logs(group)
+    except KeyboardInterrupt:
+        dockman.DOCKER.stopthreads()
+    utils.echo('')

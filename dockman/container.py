@@ -16,7 +16,7 @@ class Container(object):
         self.project = project
         self.path = path
         self.config = config
-        self.project_name = '%s.%s' % (project, name)
+        self.full_name = '%s.%s' % (project, name)
         self.ports = config.get('ports', {})
 
         try:
@@ -70,16 +70,16 @@ class Container(object):
             return None
 
         for counter in xrange(1, 10000):
-            name = '%s.%s' % (self.project_name, counter)
+            name = '%s.%s' % (self.full_name, counter)
             if dockman.DOCKER.getstate(name) is None:
                 return counter
 
     @property
     def state(self):
-        return dockman.DOCKER.getstate(self.project_name)
+        return dockman.DOCKER.getstate(self.full_name)
 
     def start(self, extra=[]):
-        utils.echo_('%s ' % self.project_name)
+        utils.echo_('%s ' % self.full_name)
 
         state = self.state
         if state:
@@ -90,11 +90,11 @@ class Container(object):
             try:
                 if state is None:
                     extended_env = self.env
-                    extended_env.update({'container_name': self.project_name})
+                    extended_env.update({'container_name': self.full_name})
                     volumes_from = self.project_volumes_from
                     dockman.DOCKER.run(self.image, daemon=True,
                                        interactive=False, remove=False,
-                                       name=self.project_name,
+                                       name=self.full_name,
                                        volumes_from=volumes_from,
                                        volumes=self.volumes,
                                        ports=self.ports,
@@ -102,7 +102,7 @@ class Container(object):
                                        env=extended_env,
                                        cmd=(extra or self.cmd))
                 else:
-                    dockman.DOCKER.start(self.project_name)
+                    dockman.DOCKER.start(self.full_name)
             except docker.DockerError as e:
                 utils.red('✘')
                 utils.red(str(e))
@@ -115,10 +115,10 @@ class Container(object):
 
         if postfix:
             ports = {}
-            name = '%s.%s' % (self.project_name, postfix)
+            name = '%s.%s' % (self.full_name, postfix)
         else:
             ports = self.ports
-            name = self.project_name
+            name = self.full_name
 
         extended_env = self.env
         extended_env.update({'container_name': name})
@@ -134,12 +134,12 @@ class Container(object):
     def stop(self):
         state = self.state
 
-        utils.echo_('%s ' % self.project_name)
+        utils.echo_('%s ' % self.full_name)
 
         if state:
             utils.echo_('stopping ... ')
             try:
-                dockman.DOCKER.stop(self.project_name)
+                dockman.DOCKER.stop(self.full_name)
             except Exception as e:
                 utils.red('✘')
                 utils.red(str(e))
@@ -158,14 +158,14 @@ class Container(object):
             self.stop()
             state = False
 
-        utils.echo_('%s ' % self.project_name)
+        utils.echo_('%s ' % self.full_name)
 
         if state is None:
             utils.echo_('does not exist ... ')
         else:
             utils.echo_('removing ... ')
             try:
-                dockman.DOCKER.remove(self.project_name)
+                dockman.DOCKER.remove(self.full_name)
             except Exception as e:
                 utils.red('✘')
                 utils.red(str(e))
