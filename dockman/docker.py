@@ -8,6 +8,7 @@ import threading
 import Queue
 
 from . import utils
+import dockman
 
 
 class DockerError(Exception):
@@ -23,21 +24,26 @@ class LogsThread(threading.Thread):
         self.sp = None
 
     def run(self):
-        fix_cmd = ['logs', '-f', self.container_name]
-        self.sp = subprocess.Popen(self.command + fix_cmd,
-                                   stdout=subprocess.PIPE,
-                                   stderr=subprocess.STDOUT)
+        fix_cmd = ['logs', '-f', '--tail="0"', self.container_name]
+        self.sp = dockman.DOCKER.Popen(self.command + fix_cmd,
+                                       stdout=subprocess.PIPE,
+                                       stderr=subprocess.STDOUT)
 
         while True:
             line = self.sp.stdout.readline()
             if not line:
                 break
-            self.queue.put('[%s] %s' % (self.container_name, line))
+
+            self.queue.put((self.container_name, line), True, 0.1)
+
+        self.sp.wait()
 
     def stop(self):
         if self.sp and self.sp.poll() is None:
-            self.sp.terminate()
-            self.sp.wait()
+            try:
+                self.sp.terminate()
+            except OSError:
+                pass
 
 
 class Docker(object):
@@ -45,6 +51,9 @@ class Docker(object):
         self.command = command
         self.logthreads = set()
         self.queue = Queue.Queue()
+
+    def Popen(self, *args, **kwargs):
+        return subprocess.Popen(*args, **kwargs)
 
     def execute(self, params):
         cmd = self.command + params
@@ -178,6 +187,21 @@ class Docker(object):
 
         return ret
 
+    def running_container_names(self, project=None):
+
+        def _filter(info):
+            if info[1] != 'running':
+                return False
+            if project:
+                name = info[0].split('.')
+                if len(name) == 1:
+                    return False
+                if name[0] != project:
+                    return False
+            return True
+
+        return [c[0] for c in filter(_filter, self.basic_info)]
+
     def ps(self, project=None):
 
         def projectfilter(info):
@@ -190,6 +214,10 @@ class Docker(object):
             return True
 
         info = filter(projectfilter, self.basic_info)
+        if project:
+            caption = 'Showing containers in project "%s"' % project
+        else:
+            caption = 'Showing all containers'
 
         if info:
             max_name_len = max([len(x[0]) + 2 for x in info])
@@ -202,7 +230,10 @@ class Docker(object):
                 max_state_len -= 2
 
             max_len = max_name_len + max_state_len + max_bind_len
+            max_len = max(max_len, len(caption))
 
+            utils.yellow('-' * max_len)
+            utils.echo(caption)
             utils.yellow('-' * max_len)
 
             fmt = '{0:<%s}{1:<%s}{2}' % (max_name_len, max_state_len)
@@ -220,23 +251,29 @@ class Docker(object):
 
             utils.yellow('-' * max_len)
 
-    def logs(self, container_names):
+    def logs(self, container_names, max_iter=0):
         for cn in container_names:
             th = LogsThread(self.queue, self.command, cn)
             self.logthreads.add(th)
             th.start()
 
-        while True:
+        iter_cnt = 0
+        while (max_iter == 0) or (iter_cnt < max_iter):
             try:
-                line = self.queue.get(False, 0.1)
+                container_name, line = self.queue.get(True, 0.1)
             except Queue.Empty:
                 continue
             else:
-                utils.echo(line, nl=False)
+                self.queue.task_done()
+                utils.yellow_(container_name + ': ')
+                utils.echo_(line)
+            finally:
+                iter_cnt += 1
 
     def stopthreads(self):
         for th in self.logthreads:
             th.stop()
+            th.join()
 
 
 class SafeDocker(Docker):
@@ -253,6 +290,9 @@ class SafeDocker(Docker):
     def __init__(self, *args, **kwargs):
         self._cmd = None
         self._output = None
+        self._popenout_filename = None
+        self._raise_oserror = False
+        self._log_max_iter = 0
 
         if '_output' in kwargs:
             o = kwargs.pop('_output')
@@ -260,7 +300,36 @@ class SafeDocker(Docker):
                 o = [o]
             self._output = map(self.replace_with_content, o)
 
+        if '_popenout_filename' in kwargs:
+            self._popenout_filename = kwargs.pop('_popenout_filename')
+
+        if '_raise_oserror' in kwargs:
+            self._raise_oserror = kwargs.pop('_raise_oserror')
+
+        if '_log_max_iter' in kwargs:
+            self._log_max_iter = kwargs.pop('_log_max_iter')
+
         super(SafeDocker, self).__init__(*args, **kwargs)
+
+    def Popen(self, cmd, *args, **kwargs):
+
+        _raise_oserror = self._raise_oserror
+
+        class Dummy(object):
+            def wait(self):
+                pass
+
+            def poll(self):
+                pass
+
+            def terminate(self):
+                if _raise_oserror:
+                    raise OSError()
+
+        dp = Dummy()
+        filename = self._popenout_filename + cmd[-1]
+        dp.stdout = open(filename, 'r')
+        return dp
 
     def execute(self, params):
         self._cmd = self.command + params
@@ -274,3 +343,7 @@ class SafeDocker(Docker):
 
     def execute_interactive(self, params):
         self._cmd = self.command + params
+
+    def logs(self, container_names, max_iter=0):
+        max_iter = max_iter or self._log_max_iter
+        super(SafeDocker, self).logs(container_names, max_iter)

@@ -176,6 +176,6 @@ class Context(object):
         for c in to_stop:
             c.stop()
 
-    def logs(self, group_name):
-        group = self.groups[group_name]
-        dockman.DOCKER.logs([c.full_name for c in group])
+    def logs(self):
+        containers = dockman.DOCKER.running_container_names(self.project)
+        dockman.DOCKER.logs(containers)

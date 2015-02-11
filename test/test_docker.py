@@ -3,6 +3,7 @@ import os
 import pytest
 
 from dockman.docker import SafeDocker
+import dockman
 
 
 class TestException(Exception):
@@ -32,6 +33,11 @@ def test_safe_docker():
 
     docker.execute_interactive(['foo'])
     assert docker._cmd == ['test', 'foo']
+
+    docker = SafeDocker(_popenout_filename=path('popenout01_'))
+    sp = docker.Popen(['c'])
+    lines = sp.stdout.readlines()
+    assert lines == ['this\n', 'is\n', 'a\n', 'test']
 
 
 def test_getstate():
@@ -92,6 +98,8 @@ def test_ps(capsys):
     docker.ps(project='src')
     out, _ = capsys.readouterr()
     assert out == ('-------------------------------------------\n'
+                   'Showing containers in project "src"\n'
+                   '-------------------------------------------\n'
                    'src.postgres  running  5432 -> 0.0.0.0:5432\n'
                    '                       1112 -> 0.0.0.0:1111\n'
                    'src.shared    running  \n'
@@ -103,7 +111,40 @@ def test_ps(capsys):
     docker.ps()
     out, _ = capsys.readouterr()
     assert out == ('------------------------------\n'
+                   'Showing all containers\n'
+                   '------------------------------\n'
                    'src.postgres            exited\n'
                    'src.shared              exited\n'
                    'mv_experiment.postgres  exited\n'
                    '------------------------------\n')
+
+
+def test_logs(capsys):
+    dockman.DOCKER = docker = SafeDocker(_popenout_filename=path('logs_01_'))
+    docker.logs(['1', '2', '3'], max_iter=10)
+    docker.stopthreads()
+    out, _ = capsys.readouterr()
+    out = out.split('\n')
+    assert len(out) == 6 + 1
+    assert '1: 01_1_1' in out
+    assert '1: 01_1_2' in out
+    assert '1: 01_1_3' in out
+    assert '2: 01_2_1' in out
+    assert '2: 01_2_2' in out
+    assert '3: 01_3_1' in out
+    assert '' in out
+
+    dockman.DOCKER = docker = SafeDocker(_popenout_filename=path('logs_01_'),
+                                         _raise_oserror=True)
+    docker.logs(['1', '2', '3'], max_iter=10)
+    docker.stopthreads()
+    out, _ = capsys.readouterr()
+    out = out.split('\n')
+    assert len(out) == 6 + 1
+    assert '1: 01_1_1' in out
+    assert '1: 01_1_2' in out
+    assert '1: 01_1_3' in out
+    assert '2: 01_2_1' in out
+    assert '2: 01_2_2' in out
+    assert '3: 01_3_1' in out
+    assert '' in out
