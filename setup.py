@@ -6,7 +6,7 @@ from setuptools import setup
 
 setup(
     name='dockman',
-    version='0.1',
+    version='0.2',
     packages=['dockman'],
     install_requires=[
         'click >= 2.4',
