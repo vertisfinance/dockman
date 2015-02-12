@@ -1,0 +1,35 @@
+containers:
+    a:
+        image: a
+
+    b:
+        image: b
+        volumes_from:
+            - a
+
+    c:
+        image: c
+        volumes_from:
+            - a
+
+    d:
+        image: d
+        volumes_from:
+            - b
+            - c
+
+    e:
+        image: e
+        volumes_from:
+            - b
+
+    f:
+        image: f
+        volumes_from:
+            - e
+            - d
+
+groups:
+    dev:
+        - e
+        - f

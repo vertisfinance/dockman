@@ -63,8 +63,11 @@ class Context(object):
 
         # load the groups
         # groups maps the group name to the list of container instances
-        self.groups = {}
+        groups = self.config.get('groups', {})
+        if not isinstance(groups, dict):
+            raise WrongConfigException('Groups must be a dictionary.')
 
+        self.groups = {}
         for name, containers in self.config.get('groups', {}).items():
             self.groups[name] = []
             for _container in containers:
@@ -110,7 +113,9 @@ class Context(object):
         arrow = ' <- ' if reverse else ' -> '
         return 'Circular dependencies: ' + arrow.join(names)
 
-    def _chain(self, seen=[], node=[], reverse=False):
+    def _chain(self, start, reverse=False):
+        seen = []
+        node = [start]
         while node:
             # one unseen dependency needed
             current = node[-1]
@@ -133,10 +138,10 @@ class Context(object):
         return seen
 
     def chain(self, container):
-        return self._chain(node=[container])
+        return self._chain(container)
 
     def reverse_chain(self, container):
-        return self._chain(node=[container], reverse=True)
+        return self._chain(container, reverse=True)
 
     def run(self, interactive, container_name, extra):
         container = self.containers[container_name]

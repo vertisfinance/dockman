@@ -44,7 +44,6 @@ def test_logs():
     result = runner.invoke(commands.logs)
     out = result.output
     out = out.split('\n')
-    print out
     assert len(out) == 6 + 2  # 2 new lines at the end
     assert 'src.postgres: 02_src.postgres_1' in out
     assert 'src.postgres: 02_src.postgres_2' in out

@@ -1,0 +1,24 @@
+containers:
+    a:
+        image: a
+
+    b:
+        image: b
+
+    c:
+        image: c
+
+    d:
+        image: d
+
+    e:
+        image: e
+
+    f:
+        image: f
+
+
+groups:
+    dev:
+        - a
+        - x
