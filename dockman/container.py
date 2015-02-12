@@ -19,19 +19,22 @@ class Container(object):
         self.full_name = '%s.%s' % (project, name)
         self.ports = config.get('ports', {})
 
+        # image
         try:
             self.image = config['image']
         except KeyError:
             msg = 'No image given for container %s' % self.name
             raise utils.WrongConfigException(msg)
 
-        # We can use ~ in the config file
+        # volumes
+        # We can use '~', '.', '..'' in the config file
         self.volumes = {}
         for hostvolume, containervolume in config.get('volumes', {}).items():
             _ = os.path.expanduser(hostvolume)
             _ = os.path.normpath(os.path.join(self.path, _))
             self.volumes[_] = containervolume
 
+        # env vars
         self.env = {}
         for key, value in config.get('env', {}).items():
             if value is None:
@@ -39,16 +42,22 @@ class Container(object):
             else:
                 self.env[key] = value
 
+        # volumes_from
         self.volumes_from = config.get('volumes_from', [])
         _vf = ['%s.%s' % (project, vf) for vf in self.volumes_from]
         self.project_volumes_from = _vf
 
+        # links
         self.links = config.get('links', {})
         linkitems = self.links.items()
         _l = dict([('%s.%s' % (self.project, k), v) for k, v in linkitems])
         self.project_links = _l
-        _cmd = config.get('cmd', None)
-        self.cmd = [_cmd] if _cmd else []
+
+        # cmd: default command when daemon
+        self.cmd = config.get('cmd', '').split()
+
+        # icmd: default command when interactive
+        self.icmd = config.get('icmd', '').split()
 
     @property
     def dependencies(self):
@@ -129,7 +138,7 @@ class Container(object):
                            volumes=self.volumes, ports=ports,
                            links=self.project_links,
                            env=extended_env,
-                           cmd=(extra or self.cmd))
+                           cmd=(extra or self.icmd))
 
     def stop(self):
         state = self.state
