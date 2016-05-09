@@ -72,7 +72,7 @@ class Context(object):
             self.groups[name] = []
             for _container in containers:
                 if _container not in self.containers:
-                    message = 'Container %s in group %s not defined.'
+                    message = 'Container "%s" in group "%s" not defined.'
                     raise WrongConfigException(message % (_container, name))
                 self.groups[name].append(self.containers[_container])
 
@@ -88,7 +88,8 @@ class Context(object):
         for c in self.containerlist:
             for dep in c.dependencies:
                 if dep not in self.containers:
-                    message = 'Container %s has an undefined dependency: %s'
+                    message = ('Container "%s" has an undefined '
+                               'dependency: "%s"')
                     raise WrongConfigException(message % (c.name, dep))
 
     def dependencies(self, container):
